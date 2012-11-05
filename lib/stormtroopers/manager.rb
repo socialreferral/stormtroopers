@@ -22,5 +22,11 @@ module Stormtroopers
     def logger
       Rails.logger
     end
+
+    class << self
+      def logger(*args)
+        instance.logger(*args)
+      end
+    end
   end
 end
