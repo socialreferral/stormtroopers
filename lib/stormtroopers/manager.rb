@@ -1,12 +1,22 @@
+require 'singleton'
+require 'active_support/core_ext/hash'
+require 'active_support/hash_with_indifferent_access'
+
 module Stormtroopers
   class Manager
-    include singleton
+    include Singleton
     # This class is dependant on rails and active support
 
     def manage
-      armies.each do |army|
-        army.manage
+      logger.info "Starting"
+      loop do
+        armies.each(&:manage)
+        sleep 0.1
       end
+    rescue Interrupt => e
+      logger.info "Stopping, waiting for running jobs to complete"
+      armies.each(&:finish)
+      logger.info "Stopped, all running jobs completed"
     end
 
     def armies
@@ -16,12 +26,26 @@ module Stormtroopers
     end
 
     def config
-      @config ||= YAML.load_file("#{Rails.root}/config/config.yml")[RAILS_ENV]
+      @config ||= HashWithIndifferentAccess.new(YAML.load_file(config_file))
+    end
+
+    def config_file
+      if defined?(Rails)
+        "#{Rails.root}/config/stormtroopers.yml"
+      else
+        "#{File.expand_path('../../../config', __FILE__)}/stormtroopers.yml"
+      end
     end
 
     def logger
-      Rails.logger
+      if defined?(Rails)
+        Rails.logger
+      else
+        @logger ||= Logger.new(STDOUT)
+      end
     end
+
+    private
 
     class << self
       def logger(*args)

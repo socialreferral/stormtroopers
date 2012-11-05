@@ -1,0 +1,11 @@
+armies:
+  - factory:
+      type: :dummy
+      name: "Dummy army 1"
+      sleep_duration: 10
+    max_threads: 2
+  - factory: 
+      type: :dummy
+      name: "Dummy army 2"
+      sleep_duration: 5
+    max_threads: 2

@@ -1,7 +1,6 @@
 module Stormtroopers
   class Trooper
-    attr_reader task
-    attr_reader parameters
+    attr_reader :task, :parameters
 
     def initialize(parameters = {}, &block)
       @parameters = parameters
@@ -27,6 +26,12 @@ module Stormtroopers
       after_execution
     rescue => e
       exception(e)
+    end
+
+    private
+
+    def logger
+      Manager.logger
     end
   end
 end

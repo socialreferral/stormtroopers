@@ -3,7 +3,7 @@ module Stormtroopers
     attr_reader :factory, :threads, :max_threads
 
     def initialize(config)
-      @factory = config[:factory].delete(:type).to_s.camelize.constantize.new(config[:factory])
+      @factory = "stormtroopers/#{config[:factory].delete(:type)}_factory".camelize.constantize.new(config[:factory])
       @max_threads = config[:max_threads] || 1
       @threads = []
     end
@@ -17,8 +17,14 @@ module Stormtroopers
       end
     end
 
+    def finish
+      threads.each(&:join)
+    end
+
+    private
+
     def cleanup
-      threads.reject{ |thread| !thread.alive? }
+      threads.reject!{ |thread| !thread.alive? }
     end
   end
 end
