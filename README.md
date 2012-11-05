@@ -1,6 +1,6 @@
 # Stormtroopers
 
-Stormtroopers is a jruby execution environment for delayed jobs 
+Stormtroopers is a jruby execution environment for delayed jobs, Work In Progress!
 
 ## Installation
 
