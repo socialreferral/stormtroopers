@@ -1,3 +1,5 @@
-require "#{File.expand_path('../lib', __FILE__)}/stormtroopers"
+#!/usr/bin/env ruby
+
+require_relative "../lib/stormtroopers"
 
 Stormtroopers::Manager.instance.manage
