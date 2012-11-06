@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+export DEBIAN_FRONTEND=noninteractive
+
+apt-get update > /dev/null
+apt-get -y install build-essential git-core openjdk-7-jre-headless
+
+# Create directory for local installs
+mkdir -p /home/vagrant/local
+chown -R vagrant:vagrant /home/vagrant/local
+
+if [ -f "/home/vagrant/local/jruby-1.7.0/bin/jruby" ]; then
+  echo "Already installed jruby 1.7"
+else
+  echo "Downloading jruby 1.7"
+  wget -q http://jruby.org.s3.amazonaws.com/downloads/1.7.0/jruby-bin-1.7.0.tar.gz
+  echo "Unpacking jruby 1.7"
+  tar -xzf jruby-bin-1.7.0.tar.gz
+  echo "Installing jruby 1.7"
+  chown -R vagrant:vagrant jruby-1.7.0 && mv jruby-1.7.0 /home/vagrant/local
+  echo "export PATH=\"/home/vagrant/local/jruby-1.7.0/bin:\$PATH\"" >> /home/vagrant/.bashrc
+  echo "export PATH=\"/home/vagrant/local/jruby-1.7.0/bin:\$PATH\"" >> /home/vagrant/.zshenv
+  ln -s /home/vagrant/local/jruby-1.7.0/bin/jruby /home/vagrant/local/jruby-1.7.0/bin/ruby
+fi
+
+echo "Activating jruby 1.7"
+export PATH=/home/vagrant/local/jruby-1.7.0/bin:$PATH
+
+gem install bundler pry
+
+su -c 'cd /vagrant && bundle check || bundle' vagrant
