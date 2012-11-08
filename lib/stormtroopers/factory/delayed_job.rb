@@ -1,3 +1,5 @@
+require_relative "../troopers/delayed_job"
+
 module Stormtroopers
   class DelayedJobFactory < Factory
     def produce

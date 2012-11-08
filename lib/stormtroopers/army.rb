@@ -1,6 +1,3 @@
-require_relative "factory/dummy"
-require_relative "factory/delayed_job"
-
 module Stormtroopers
   class Army
     attr_reader :factory, :threads, :max_threads

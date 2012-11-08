@@ -1,3 +1,5 @@
+require_relative "../troopers/dummy"
+
 module Stormtroopers
   class DummyFactory < Factory
 
