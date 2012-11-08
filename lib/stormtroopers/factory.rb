@@ -9,12 +9,9 @@ module Stormtroopers
     def produce
       raise NotImplementedError.new("produce method not implemented on the factory")
     end
+
+    def logger
+      Manager.logger
+    end
   end
 end
-
-require_relative "factory/dummy"
-
-if defined?(Delayed::Job)
-  require_relative "factory/delayed_job"
-end
-
