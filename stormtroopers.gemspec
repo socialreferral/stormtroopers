@@ -7,7 +7,7 @@ Gem::Specification.new do |gem|
   gem.name          = "stormtroopers"
   gem.version       = Stormtroopers::VERSION
   gem.authors       = ["Andre Meij", "Mark Kremer"]
-  gem.email         = ["andre@socialreferral.com"]
+  gem.email         = ["andre@socialreferral.com", "mark@socialreferral.com"]
   gem.description   = %q{Stormtroopers is a jruby execution environment for delayed jobs }
   gem.summary       = %q{Execute delayed jobs in a threaded jruby environment}
   gem.homepage      = "http://github.com/socialreferral/stormtroopers"
