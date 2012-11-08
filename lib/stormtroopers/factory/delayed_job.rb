@@ -1,4 +1,4 @@
-require_relative "../troopers/delayed_job"
+require_relative "../trooper/delayed_job"
 
 module Stormtroopers
   class DelayedJobFactory < Factory
