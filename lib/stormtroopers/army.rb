@@ -19,7 +19,16 @@ module Stormtroopers
       cleanup
       if threads.count < max_threads
         if trooper = factory.produce
-          threads << Thread.new { trooper.run }
+          threads << Thread.new do
+            begin
+              trooper.run
+            ensure
+              if defined?(::Mongoid)
+                ::Mongoid::IdentityMap.clear
+                ::Mongoid.disconnect_sessions
+              end
+            end
+          end
         end
       end
     end
