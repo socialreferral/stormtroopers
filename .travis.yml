@@ -1,0 +1,7 @@
+notifications:
+  recipients:
+    - mark@socialreferral.com
+    - andre@socialreferral.com
+rvm:
+  - jruby-19mode
+script: "bundle exec rspec"
