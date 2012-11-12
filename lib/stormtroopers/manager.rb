@@ -7,7 +7,6 @@ require 'active_support/hash_with_indifferent_access'
 module Stormtroopers
   class Manager
     include Singleton
-    # This class is dependant on rails and active support
 
     def manage
       logger.info "Starting"
