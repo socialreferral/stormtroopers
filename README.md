@@ -1,4 +1,4 @@
-# Stormtroopers
+# Stormtroopers [![Build Status](https://secure.travis-ci.org/socialreferral/stormtroopers.png)](http://travis-ci.org/socialreferral/stormtroopers)
 
 Stormtroopers is a jruby execution environment for delayed jobs, Work In Progress!
 
