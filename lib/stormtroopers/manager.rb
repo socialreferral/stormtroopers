@@ -9,13 +9,19 @@ module Stormtroopers
     include Singleton
 
     def manage
+      @loopy = true
+
+      Signal.trap("INT") do
+        logger.info "Stopping, waiting for running jobs to complete"
+        @loopy = false
+      end
+
       logger.info "Starting"
-      loop do
+      while @loopy do
         armies.each(&:manage)
         sleep 0.1
       end
-    rescue Interrupt => e
-      logger.info "Stopping, waiting for running jobs to complete"
+
       armies.each(&:finish)
       logger.info "Stopped, all running jobs completed"
     end
