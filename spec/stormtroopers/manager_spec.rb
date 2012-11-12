@@ -7,38 +7,33 @@ describe Stormtroopers::Manager do
     stub_const("Stormtroopers::Army", Class.new)
   }
 
-  describe "#logger" do
+  describe "#working_directory" do
     context "with Rails" do
-      it "uses the Rails logger" do
+      it "uses the Rails root" do
         stub_const("Rails", Class.new)
-        logger = stub
-        Rails.should_receive(:logger).and_return(logger)
-        manager.logger.should equal(logger)
+        Rails.should_receive(:root).and_return("/path/to/app")
+        manager.working_directory.should eq("/path/to/app")
       end
     end
 
     context "without Rails" do
-      it "uses a logger to STDOUT" do
-        logger = stub.as_null_object
-        Logger.should_receive(:new).with(STDOUT).and_return(logger)
-        manager.logger.should equal(logger)
+      it "uses the current working directory" do
+        manager.working_directory.should eq(Dir.pwd)
       end
     end
   end
 
-  describe "#config_file" do
-    context "with Rails" do
-      it "uses a config_file relative to Rails.root" do
-        stub_const("Rails", Class.new)
-        Rails.should_receive(:root).and_return("/path/to/app")
-        manager.config_file.should eq("/path/to/app/config/stormtroopers.yml")
-      end
+  describe "#logger" do
+    it "creates a logger to log/stormtroopers.log" do
+      logger = stub.as_null_object
+      Logger.should_receive(:new).with(File.join(manager.working_directory, "log", "stormtroopers.log")).and_return(logger)
+      manager.logger.should equal(logger)
     end
+  end
 
-    context "without Rails" do
-      it "uses the config_file relative to the current working directory" do
-        manager.config_file.should eq(File.join(Dir.getwd, "config", "stormtroopers.yml"))
-      end
+  describe "#config_file" do
+    it "uses the config_file relative to the current working directory" do
+      manager.config_file.should eq(File.join(manager.working_directory, "config", "stormtroopers.yml"))
     end
   end
 

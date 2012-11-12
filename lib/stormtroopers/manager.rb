@@ -42,20 +42,22 @@ module Stormtroopers
       @config ||= HashWithIndifferentAccess.new(YAML.load_file(config_file))
     end
 
-    def config_file
+    def working_directory
       if defined?(Rails)
-        "#{Rails.root}/config/stormtroopers.yml"
+        Rails.root
       else
-        File.join(Dir.getwd, "config", "stormtroopers.yml")
+        Dir.getwd
       end
     end
 
+    def config_file
+      File.join(working_directory, "config", "stormtroopers.yml")
+    end
+
     def logger
-      if defined?(Rails)
-        Rails.logger
-      else
-        @logger ||= Logger.new(STDOUT)
-      end
+      log_directory = File.join(working_directory, "log")
+      Dir.mkdir(log_directory) unless File.directory?(log_directory)
+      @logger ||= Logger.new(File.join(working_directory, "log", "stormtroopers.log"))
     end
 
     private
