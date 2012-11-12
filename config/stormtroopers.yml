@@ -1,11 +1,12 @@
 armies:
   - factory:
       type: :dummy
-      name: "Dummy army 1"
+      name: "Dummy Trooper 1"
       sleep_duration: 10
     max_threads: 2
+    name: "Dad's Army"
   - factory: 
       type: :dummy
-      name: "Dummy army 2"
+      name: "Dummy Trooper 2"
       sleep_duration: 5
     max_threads: 2
