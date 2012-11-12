@@ -3,27 +3,33 @@ require 'yaml'
 require 'singleton'
 require 'active_support/core_ext/hash'
 require 'active_support/hash_with_indifferent_access'
+require_relative "./already_running"
 
 module Stormtroopers
   class Manager
     include Singleton
 
     def manage
-      @loopy = true
+      raise AlreadyRunning if managing?
+      @managing = true
 
       Signal.trap("INT") do
         logger.info "Stopping, waiting for running jobs to complete"
-        @loopy = false
+        @managing = false
       end
 
       logger.info "Starting"
-      while @loopy do
+      while managing? do
         armies.each(&:manage)
         sleep 0.1
       end
 
       armies.each(&:finish)
       logger.info "Stopped, all running jobs completed"
+    end
+
+    def managing?
+      @managing || false
     end
 
     def armies
@@ -40,7 +46,7 @@ module Stormtroopers
       if defined?(Rails)
         "#{Rails.root}/config/stormtroopers.yml"
       else
-        "#{File.expand_path('../../../config', __FILE__)}/stormtroopers.yml"
+        File.join(Dir.getwd, "config", "stormtroopers.yml")
       end
     end
 
