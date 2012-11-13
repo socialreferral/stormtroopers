@@ -2,7 +2,7 @@ require "stormtroopers"
 
 describe Stormtroopers::Army do
   let(:army) do
-    Stormtroopers::Army.new(name: "Dad's Army", max_threads: 2, factory: {type: :dummy})
+    Stormtroopers::Army.new(name: "Dad's Army", max_threads: 2, factory: {name: "Dad's Factory", type: :dummy})
   end
 
   describe "#initialize" do
@@ -18,7 +18,16 @@ describe Stormtroopers::Army do
       factory_class = stub
       Stormtroopers::Army.any_instance.should_receive(:factory_class).and_return(factory_class)
       factory_instance = stub
-      factory_class.should_receive(:new).and_return(factory_instance)
+      factory_class.should_receive(:new).with(name: "Dad's Factory", type: :dummy).and_return(factory_instance)
+      army.factory.should equal(factory_instance)
+    end
+
+    it "when there is no factory name, the army name is used as the factory name" do
+      factory_class = stub
+      Stormtroopers::Army.any_instance.should_receive(:factory_class).and_return(factory_class)
+      factory_instance = stub
+      factory_class.should_receive(:new).with(name: "Dad's Army", type: :dummy).and_return(factory_instance)
+      army = Stormtroopers::Army.new(name: "Dad's Army", max_threads: 2, factory: {type: :dummy})
       army.factory.should equal(factory_instance)
     end
   end
