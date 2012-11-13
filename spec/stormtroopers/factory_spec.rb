@@ -1,4 +1,4 @@
-require "stormtroopers"
+require "stormtroopers/factory"
 
 describe Stormtroopers::Factory do
   describe "#options" do
