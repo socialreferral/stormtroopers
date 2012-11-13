@@ -23,6 +23,7 @@ module Stormtroopers
       else
         logger.error("PERMANENTLY removing #{job.name} because of #{job.attempts} consecutive failures.")
         job.hook(:failure)
+        job.fail!
       end
     end
 

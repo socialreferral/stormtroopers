@@ -4,7 +4,9 @@ module Stormtroopers
 
     def initialize(config)
       @name = config[:name] || factory_class(config).name
-      @factory = factory_class(config).new({name: config[:name]}.merge(config[:factory]))
+      factory_options = HashWithIndifferentAccess.new(config[:factory])
+      factory_options[:name] ||= config[:name]
+      @factory = factory_class(config).new(factory_options)
       @max_threads = config[:max_threads] || 1
       @threads = []
     end

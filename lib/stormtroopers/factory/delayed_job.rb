@@ -4,7 +4,7 @@ module Stormtroopers
       worker = Delayed::Worker.new(options)
       worker.name = "rand #{Time.now.utc.to_f} #{rand(1000)}"
       if job = Delayed::Job.reserve(worker)
-        logger.info("#{options[:name]} producing trooper to run #{job.queue} job #{job.id}")
+        logger.info("#{self.name} producing trooper to run #{job.queue} job #{job.id}")
         DelayedJobTrooper.new(job)
       end
     end

@@ -9,6 +9,14 @@ describe Stormtroopers::Factory do
     end
   end
 
+  describe "#name" do
+    it "returns name extracted from the options during #initialize" do
+      options = {name: "The Fun Factory"}
+      factory = Stormtroopers::Factory.new(options)
+      factory.name.should eq("The Fun Factory")
+    end
+  end
+
   describe "#produce" do
     it "is not implemented" do
       factory = Stormtroopers::Factory.new

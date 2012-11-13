@@ -1,9 +1,10 @@
 module Stormtroopers
   class Factory
-    attr_reader :options
+    attr_reader :options, :name
 
     def initialize(options = {})
       @options = options
+      @name = options[:name]
     end
 
     def produce

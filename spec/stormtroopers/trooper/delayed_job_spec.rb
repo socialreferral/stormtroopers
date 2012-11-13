@@ -49,6 +49,7 @@ describe Stormtroopers::DelayedJobTrooper do
         job.stub(:attempts).and_return(3)
         job.stub(:max_attempts).and_return(3)
         job.should_receive(:hook).with(:failure)
+        job.should_receive(:fail!)
         trooper.reschedule
       end
     end
