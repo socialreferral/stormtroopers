@@ -54,6 +54,12 @@ Each Army can be given a set of options:
 
 You set the Army's Factory with the factory type or class option. When using type this is translated into a builtin class, when using class you can specify the name of whatever class you like (it needs to implement the appropriate interface to be able to work of course, have a look through the source code and specs to figure out what you need to do). Besides specifying the type or class, you can also specify the Factory's name (used for logging purposes), if you don't give the Factory a name then the Army's name is propagated to the Factory. The factory options also include specific settings for the chosen backend, for DelayedJob you can specify the queues that jobs may be picked up from. If you don't specify queues then the factory will pick up jobs from all queues.
 
+## TODO
+
+- Daemonization
+- Other backends
+- Documentation
+
 ## Contributing
 
 1. Fork it
