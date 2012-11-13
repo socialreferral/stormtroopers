@@ -16,19 +16,17 @@ module Stormtroopers
     end
 
     def exception(exception)
-      raise
-      # Empty hook for overriding
+      # Hook for to override handling exceptions
+      raise exception
     end
 
     def run
-      before_execution
+      before_run
       task.call
-      after_execution
+      after_run
     rescue => e
       exception(e)
     end
-
-    private
 
     def logger
       Manager.logger
