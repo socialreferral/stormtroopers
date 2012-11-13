@@ -15,18 +15,19 @@ module Stormtroopers
       reschedule
     end
 
-    private
-
     def reschedule
       if (job.attempts += 1) < max_attempts(job)
-        time ||= job.reschedule_at
-        job.run_at = time
+        job.run_at = job.reschedule_at
         job.unlock
         job.save!
       else
-        logger.error "PERMANENTLY removing #{job.name} because of #{job.attempts} consecutive failures.", Logger::INFO
+        logger.error("PERMANENTLY removing #{job.name} because of #{job.attempts} consecutive failures.")
         job.hook(:failure)
       end
+    end
+
+    def max_attempts(job)
+      job.max_attempts || Delayed::Worker.max_attempts
     end
   end
 end
