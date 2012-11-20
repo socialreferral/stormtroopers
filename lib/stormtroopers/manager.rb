@@ -12,11 +12,6 @@ if ENV["DJ_SPEED"] == "ludicrous"
   # This will cause all of our workers to pick up jobs from ANY queue, so use
   # with caution!
 
-  class Delayed::Backend::Mongoid::Job
-    def self.reserve(worker, max_run_time = Worker.max_run_time)
-      where(failed_at: nil, locked_at: nil).find_and_modify({"$set" => {locked_at: db_time_now, locked_by: worker.name}}, new: true)
-    end
-  end
 end
 
 
@@ -34,6 +29,19 @@ module Stormtroopers
       end
 
       logger.info "Starting"
+
+      if config[:speed] == "ludicrous"
+        logger.info "Ludicrous speed? Sir! we have never gone that fast before, I dont know if the ship can take it! Whats the matter Colonel Sanders? CHICKEN?!"
+        puts "Ludicrous speed? Sir! we have never gone that fast before, I dont know if the ship can take it! Whats the matter Colonel Sanders? CHICKEN?!"
+        Delayed::Backend::Mongoid::Job.class_eval do
+            def self.reserve(worker, max_run_time = Worker.max_run_time)
+              where(failed_at: nil, locked_at: nil).find_and_modify({"$set" => {locked_at: db_time_now, locked_by: worker.name}}, new: true)
+            end
+          end
+        end
+      end        
+
+
       while managing? do
         assigned = armies.map(&:manage)
         sleep timeout(assigned.include?(true)) 
