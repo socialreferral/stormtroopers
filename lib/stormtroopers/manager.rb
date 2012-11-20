@@ -6,15 +6,6 @@ require 'active_support/hash_with_indifferent_access'
 require_relative "./already_running"
 
 
-if ENV["DJ_SPEED"] == "ludicrous"
-  # Go to ludicrous speed (http://www.youtube.com/watch?v=mk7VWcuVOf0) by
-  # overriding Delayed::Job#reserve to do the bare minimum to return a job.
-  # This will cause all of our workers to pick up jobs from ANY queue, so use
-  # with caution!
-
-end
-
-
 module Stormtroopers
   class Manager
     include Singleton
