@@ -16,12 +16,19 @@ module Stormtroopers
     end
 
     def manage
-      cleanup
-      if threads.count < max_threads
+      assigned = false
+      if need_more_troops?
         if trooper = factory.produce
           run_trooper(trooper)
+          assigned = true
         end
       end
+      assigned
+    end
+
+    def need_more_troops?
+      cleanup
+      threads.count < max_threads
     end
 
     def run_trooper(trooper)

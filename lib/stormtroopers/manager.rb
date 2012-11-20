@@ -5,6 +5,21 @@ require 'active_support/core_ext/hash'
 require 'active_support/hash_with_indifferent_access'
 require_relative "./already_running"
 
+
+if ENV["DJ_SPEED"] == "ludicrous"
+  # Go to ludicrous speed (http://www.youtube.com/watch?v=mk7VWcuVOf0) by
+  # overriding Delayed::Job#reserve to do the bare minimum to return a job.
+  # This will cause all of our workers to pick up jobs from ANY queue, so use
+  # with caution!
+
+  class Delayed::Backend::Mongoid::Job
+    def self.reserve(worker, max_run_time = Worker.max_run_time)
+      where(failed_at: nil, locked_at: nil).find_and_modify({"$set" => {locked_at: db_time_now, locked_by: worker.name}}, new: true)
+    end
+  end
+end
+
+
 module Stormtroopers
   class Manager
     include Singleton
@@ -20,8 +35,8 @@ module Stormtroopers
 
       logger.info "Starting"
       while managing? do
-        armies.each(&:manage)
-        sleep 0.1
+        assigned = armies.map(&:manage)
+        sleep timeout(assigned.include?(true)) 
       end
 
       armies.each(&:finish)
@@ -61,6 +76,12 @@ module Stormtroopers
     end
 
     private
+
+    def timeout(busy)
+      @timeout = 0 if @timeout.nil? || busy
+      @timeout += 0.1 if @timeout < 2
+      @timeout
+    end
 
     class << self
       def logger(*args)
