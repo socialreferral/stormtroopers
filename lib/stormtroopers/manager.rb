@@ -34,9 +34,8 @@ module Stormtroopers
         logger.info "Ludicrous speed? Sir! we have never gone that fast before, I dont know if the ship can take it! Whats the matter Colonel Sanders? CHICKEN?!"
         puts "Ludicrous speed? Sir! we have never gone that fast before, I dont know if the ship can take it! Whats the matter Colonel Sanders? CHICKEN?!"
         Delayed::Backend::Mongoid::Job.class_eval do
-            def self.reserve(worker, max_run_time = Worker.max_run_time)
-              where(failed_at: nil, locked_at: nil).find_and_modify({"$set" => {locked_at: db_time_now, locked_by: worker.name}}, new: true)
-            end
+          def self.reserve(worker, max_run_time = Worker.max_run_time)
+            where(failed_at: nil, locked_at: nil).find_and_modify({"$set" => {locked_at: db_time_now, locked_by: worker.name}}, new: true)
           end
         end
       end        
