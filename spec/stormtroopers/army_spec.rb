@@ -71,6 +71,24 @@ describe Stormtroopers::Army do
       army.run_trooper(trooper)
     end
 
+    it "calls trooper exception hook with the exception when trooper#run raises one" do
+      exception = StandardError.new
+      trooper = stub
+      trooper.stub(:run) { raise exception }
+      trooper.should_receive(:exception).with(exception)
+      Thread.should_receive(:new).and_yield
+      army.run_trooper(trooper)
+    end
+
+    it "calls logs the exceptions at error level when trooper#run raises one" do
+      exception = StandardError.new
+      trooper = stub.as_null_object
+      trooper.stub(:run) { raise exception }
+      army.logger.should_receive(:error)
+      Thread.should_receive(:new).and_yield
+      army.run_trooper(trooper)
+    end
+
     it "cleans up the Mongoid environment if Mongoid is defined" do
       stub_const("Mongoid", Class.new)
       stub_const("Mongoid::IdentityMap", Class.new)

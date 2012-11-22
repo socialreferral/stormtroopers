@@ -35,6 +35,9 @@ module Stormtroopers
       threads << Thread.new do
         begin
           trooper.run
+        rescue Exception => exception
+          logger.error("#{exception.message}:\n#{exception.backtrace.join("\n")}")
+          trooper.exception(exception)
         ensure
           if defined?(::Mongoid)
             ::Mongoid::IdentityMap.clear
