@@ -94,6 +94,7 @@ describe Stormtroopers::Army do
       stub_const("Mongoid::IdentityMap", Class.new)
       Mongoid::IdentityMap.should_receive(:clear)
       mongoid_session = stub
+      Mongoid.should_receive(:sessions).and_return({default: mongoid_session})
       Mongoid.should_receive(:session).with(:default).and_return(mongoid_session)
       mongoid_session.should_receive(:disconnect)
       trooper = mock

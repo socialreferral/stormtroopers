@@ -41,7 +41,9 @@ module Stormtroopers
         ensure
           if defined?(::Mongoid)
             ::Mongoid::IdentityMap.clear
-            ::Mongoid.session(:default).disconnect
+            ::Mongoid.sessions.keys.each do |session_name|
+              ::Mongoid.session(session_name).disconnect
+            end
           end
         end
       end
