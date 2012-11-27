@@ -83,6 +83,7 @@ describe Stormtroopers::Army do
       exception = StandardError.new
       trooper = Stormtroopers::Trooper.new { raise exception }
       army.send(:logger).should_receive(:error)
+      army.send(:logger).should_receive(:error)
       Thread.should_receive(:new).and_yield
       army.run_trooper(trooper)
     end
