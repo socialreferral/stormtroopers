@@ -73,8 +73,7 @@ describe Stormtroopers::Army do
 
     it "calls trooper exception hook with the exception when trooper#run raises one" do
       exception = StandardError.new
-      trooper = stub
-      trooper.stub(:run) { raise exception }
+      trooper = Stormtroopers::Trooper.new { raise exception }
       trooper.should_receive(:exception).with(exception)
       Thread.should_receive(:new).and_yield
       army.run_trooper(trooper)
@@ -82,9 +81,8 @@ describe Stormtroopers::Army do
 
     it "calls logs the exceptions at error level when trooper#run raises one" do
       exception = StandardError.new
-      trooper = stub.as_null_object
-      trooper.stub(:run) { raise exception }
-      army.logger.should_receive(:error)
+      trooper = Stormtroopers::Trooper.new { raise exception }
+      army.send(:logger).should_receive(:error)
       Thread.should_receive(:new).and_yield
       army.run_trooper(trooper)
     end

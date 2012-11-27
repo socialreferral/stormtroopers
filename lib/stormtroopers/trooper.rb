@@ -26,8 +26,8 @@ module Stormtroopers
 
     def exception(exception)
       # Hook for to override handling exceptions
-      logger.error "Error processing #{task_name}: #{exception.message}"
-      logger.debug "Stacktrace #{task_name}:\n#{exception.backtrace.join("\n")}"
+      logger.error "Error processing #{name}: #{exception.message}"
+      logger.debug "Stacktrace #{name}:\n#{exception.backtrace.join("\n")}"
       raise exception
     end
 

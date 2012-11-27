@@ -52,7 +52,6 @@ module Stormtroopers
           trooper.start
         rescue Exception => exception
           logger.error("Unexpected thread death for trooper:  #{trooper.status rescue "failed to retrieve trooper status"} : #{exception.message}:\n#{exception.backtrace.join("\n")}")
-          trooper.exception(exception)
         ensure
           if defined?(::Mongoid)
             ::Mongoid::IdentityMap.clear
