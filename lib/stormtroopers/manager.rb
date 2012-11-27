@@ -48,9 +48,8 @@ module Stormtroopers
     def log_current_status
       logger.info "Current status"
       armies.each do |army|
-        logger.info "Army #{army.name}"
         army.running_troopers_status.each do |status|
-          logger.info status
+          logger.info "#{army.name}: #{status}"
         end
       end
     end
