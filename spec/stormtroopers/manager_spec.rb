@@ -5,6 +5,7 @@ describe Stormtroopers::Manager do
 
   before(:each) {
     stub_const("Stormtroopers::Army", Class.new)
+    Stormtroopers::Manager.stub(:instance).and_return(Stormtroopers::Manager.send(:new))
   }
 
   describe "#working_directory" do
