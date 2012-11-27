@@ -37,14 +37,14 @@ describe Stormtroopers::Army do
       live_thread_stub = stub(:alive? => true)
       dead_thread_stub = stub(:alive? => false)
       army.stub(:threads).and_return([live_thread_stub, dead_thread_stub])
-      army.cleanup
+      army.send(:cleanup!)
       army.threads.should eq([live_thread_stub])
     end
   end
 
   describe "#manage" do
     it "cleans up" do
-      army.should_receive(:cleanup)
+      army.should_receive(:cleanup!)
       army.manage
     end
 
@@ -66,7 +66,7 @@ describe Stormtroopers::Army do
   describe "#run_trooper" do
     it "creates a new thread and runs the trooper in it" do
       trooper = mock
-      trooper.should_receive(:run)
+      trooper.should_receive(:start)
       Thread.should_receive(:new).and_yield
       army.run_trooper(trooper)
     end
@@ -79,7 +79,7 @@ describe Stormtroopers::Army do
       Mongoid.should_receive(:session).with(:default).and_return(mongoid_session)
       mongoid_session.should_receive(:disconnect)
       trooper = mock
-      trooper.should_receive(:run)
+      trooper.should_receive(:start)
       Thread.should_receive(:new).and_yield
       army.run_trooper(trooper)
     end
@@ -100,7 +100,7 @@ describe Stormtroopers::Army do
     it "takes the logger from Stormtroopers::Manager" do
       logger = stub
       Stormtroopers::Manager.stub(:logger).and_return(logger)
-      army.logger.should equal(logger)
+      army.send(:logger).should equal(logger)
     end
   end
 

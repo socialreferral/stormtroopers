@@ -26,7 +26,7 @@ describe Stormtroopers::Manager do
   describe "#logger" do
     it "creates a logger to log/stormtroopers.log" do
       logger = stub.as_null_object
-      Logger.should_receive(:new).with(File.join(manager.working_directory, "log", "stormtroopers.log")).and_return(logger)
+      Logger.should_receive(:new).with(File.join(manager.working_directory, "log", "stormtroopers.log"), 'daily').and_return(logger)
       manager.logger.should equal(logger)
     end
   end

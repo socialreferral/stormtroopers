@@ -3,7 +3,7 @@
 begin
   require "config/environment"
 rescue LoadError
-  puts "Could not load environment"
+  puts "Could not load rails environment, running standalone"
 end
 
 require_relative "../lib/stormtroopers"

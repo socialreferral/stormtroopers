@@ -27,14 +27,29 @@ module Stormtroopers
     end
 
     def need_more_troops?
-      cleanup
+      cleanup!
       threads.count < max_threads
+    end
+
+    def idle?
+      cleanup!
+      threads.count == 0
+    end
+
+    def running_troopers
+      cleanup!
+      threads.map{ |thread| thread[:trooper] }.compact
+    end
+
+    def running_troopers_status
+      running_troopers.map(&:status)
     end
 
     def run_trooper(trooper)
       threads << Thread.new do
         begin
-          trooper.run
+          Thread.current[:trooper] = trooper
+          trooper.start
         ensure
           if defined?(::Mongoid)
             ::Mongoid::IdentityMap.clear
@@ -44,12 +59,18 @@ module Stormtroopers
       end
     end
 
+    def running_task_names
+      threads.each
+    end
+
     def finish
       logger.debug("#{name}: Finishing")
       threads.each(&:join)
     end
 
-    def cleanup
+    private
+
+    def cleanup!
       threads.reject!{ |thread| !thread.alive? }
     end
 

@@ -6,6 +6,10 @@ module Stormtroopers
       @job = job
     end
 
+    def task_name
+      "#{@job.name} (#{job.id})"
+    end
+
     def run
       job.invoke_job
       job.destroy
@@ -21,7 +25,7 @@ module Stormtroopers
         job.unlock
         job.save!
       else
-        logger.error("PERMANENTLY removing #{job.name} because of #{job.attempts} consecutive failures.")
+        logger.error("PERMANENTLY removing #{job.name} (#{job.id}) because of #{job.attempts} consecutive failures.")
         job.hook(:failure)
         job.fail!
       end

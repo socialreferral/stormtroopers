@@ -16,7 +16,12 @@ module Stormtroopers
 
       Signal.trap("INT") do
         logger.info "Stopping, waiting for running jobs to complete"
+        log_current_status
         @managing = false
+      end
+
+      Signal.trap("USR2") do
+        log_current_status
       end
 
       logger.info "Starting"
@@ -38,6 +43,16 @@ module Stormtroopers
 
       armies.each(&:finish)
       logger.info "Stopped, all running jobs completed"
+    end
+
+    def log_current_status
+      logger.info "Current status"
+      armies.each do |army|
+        logger.info "Army #{army.name}"
+        army.running_troopers_status.each do |status|
+          logger.info status
+        end
+      end
     end
 
     def managing?
@@ -67,9 +82,15 @@ module Stormtroopers
     end
 
     def logger
-      log_directory = File.join(working_directory, "log")
-      Dir.mkdir(log_directory) unless File.directory?(log_directory)
-      @logger ||= Logger.new(File.join(working_directory, "log", "stormtroopers.log"))
+      unless @logger 
+        log_directory = File.join(working_directory, "log")
+        Dir.mkdir(log_directory) unless File.directory?(log_directory)
+        @logger = Logger.new(File.join(working_directory, "log", "stormtroopers.log"), 'daily')
+        logger.formatter = proc do |severity, datetime, progname, msg|
+          "#{datetime.strftime("%Y-%m-%d %H:%M:%S")} #{severity}: #{msg}\n"
+        end
+      end
+      @logger
     end
 
     private

@@ -21,36 +21,36 @@ describe Stormtroopers::Trooper do
     end
   end
 
-  describe "#run" do
+  describe "#start" do
     let(:task) { lambda { puts "This is a task" } }
     let(:trooper) { Stormtroopers::Trooper.new({}, &task) }
 
     it "calls the before_run hook" do
       trooper.should_receive(:before_run)
-      trooper.run
+      trooper.start
     end
 
     it "calls call on the task" do
       task.should_receive(:call)
-      trooper.run
+      trooper.start
     end
 
     it "calls the after_run hook" do
       trooper.should_receive(:after_run)
-      trooper.run
+      trooper.start
     end
 
     it "when the task raises an exception the exception hook is called" do
       task.stub(:call) { raise "Oops" }
       trooper.should_receive(:exception)
-      trooper.run
+      trooper.start
     end
   end
 
   describe "#logger" do
     it "uses the Stormtroopers::Manager#logger" do
       trooper = Stormtroopers::Trooper.new
-      trooper.logger.should equal(Stormtroopers::Manager.logger)
+      trooper.send(:logger).should equal(Stormtroopers::Manager.logger)
     end
   end
 end
