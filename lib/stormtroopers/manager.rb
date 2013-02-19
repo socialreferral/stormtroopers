@@ -10,14 +10,23 @@ module Stormtroopers
   class Manager
     include Singleton
 
+    def stop_managing
+      return unless managing?
+      logger.info "Stopping, waiting for running jobs to complete"
+      log_current_status
+      @managing = false
+    end
+
     def manage
       raise AlreadyRunning if managing?
       @managing = true
 
+      Signal.trap("TERM") do
+        stop_managing
+      end
+
       Signal.trap("INT") do
-        logger.info "Stopping, waiting for running jobs to complete"
-        log_current_status
-        @managing = false
+        stop_managing
       end
 
       Signal.trap("USR2") do
@@ -38,7 +47,7 @@ module Stormtroopers
 
       while managing? do
         assigned = armies.map(&:manage)
-        sleep timeout(assigned.include?(true)) 
+        sleep timeout(assigned.include?(true))
       end
 
       armies.each(&:finish)
@@ -81,7 +90,7 @@ module Stormtroopers
     end
 
     def logger
-      unless @logger 
+      unless @logger
         log_directory = File.join(working_directory, "log")
         Dir.mkdir(log_directory) unless File.directory?(log_directory)
         @logger = Logger.new(File.join(working_directory, "log", "stormtroopers.log"), 'daily')
