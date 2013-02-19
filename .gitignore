@@ -1,5 +1,6 @@
 *.gem
 *.rbc
+.apt-cache
 .bundle
 .config
 .vagrant
